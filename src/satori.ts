@@ -12,11 +12,44 @@ export default async function satoriFunc(
   frameImg: string,
   addImg: string,
   desc: string,
-  title: string
+  title: string,
+  Ratio:string
 ) {
   // Optimal dimensions for Farcaster frames (1.91:1 aspect ratio)
-  const WIDTH = 504;
-  const HEIGHT = 504;
+  let WIDTH = 504;
+  let HEIGHT = 504;
+  let ADD_SIZE = 70;
+  let BOTTOM_HEIGHT = 100;
+  let FONT_SIZE = 18;
+console.log("Ratio",Ratio);
+
+if(Ratio === "1.91:1"){
+   WIDTH = 1200;
+   HEIGHT = 630;
+   ADD_SIZE = 120; // Increased add size for 1.91:1 ratio
+   BOTTOM_HEIGHT = 150; // Increased bottom white space for 1.91:1 ratio
+   FONT_SIZE = 32; // Increased font size for 1.91:1 ratio
+}
+if(Ratio === "1:1"){
+   WIDTH = 600;
+   HEIGHT = 600;
+}
+
+  // Get frame image size
+  const frameImgBuffer = await fetch(frameImg).then(res => res.arrayBuffer());
+  const frameImgMetadata = await sharp(Buffer.from(frameImgBuffer)).metadata();
+  console.log("Frame image dimensions:", {
+    width: frameImgMetadata.width,
+    height: frameImgMetadata.height
+  });
+
+  //  WIDTH = frameImgMetadata?.width || WIDTH
+  //  HEIGHT = frameImgMetadata?.height || HEIGHT;
+
+
+  console.log("final width",WIDTH);
+  console.log("final height",HEIGHT);
+  
   
   const template = await html(`
      <div style="
@@ -39,7 +72,7 @@ export default async function satoriFunc(
            top: 0;
            left: 0;
            width: ${WIDTH}px; 
-           height: ${HEIGHT - 100}px;
+           height: ${HEIGHT - BOTTOM_HEIGHT}px;
            object-fit: cover;
          "
        />
@@ -53,15 +86,15 @@ export default async function satoriFunc(
          gap: 12px; 
          background-color: white; 
          width: ${WIDTH}px;
-         height: 100px;
+         height: ${BOTTOM_HEIGHT}px;
          padding: 16px;
        ">
           <img 
             src=${addImg} 
             alt="Profile" 
             style="
-              width: 70px; 
-              height: 70px; 
+              width: ${ADD_SIZE}px; 
+              height: ${ADD_SIZE}px; 
               border-radius: 50%;
               object-fit: cover;
               border: 1px solid #ffffff;
@@ -76,9 +109,9 @@ export default async function satoriFunc(
             margin-left: 8px;
           ">
             <p style="
-              font-size: 18px; 
+              font-size: ${FONT_SIZE}px; 
               margin: 0;
-              max-width: ${WIDTH - 140}px;
+              max-width: ${WIDTH - (ADD_SIZE + 70)}px;
               line-height: 1.4;
               overflow-wrap: break-word;
             ">
