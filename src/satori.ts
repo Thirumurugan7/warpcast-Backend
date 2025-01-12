@@ -15,6 +15,32 @@ export default async function satoriFunc(
   title: string,
   Ratio:string
 ) {
+
+
+  let image_Data;
+  console.log("addImg",addImg);
+
+  // Get ad image size
+  try {
+    const adImgResponse = await fetch(addImg);
+    // console.log("Ad image response:", {
+    //   status: adImgResponse.status,
+    //   headers: Object.fromEntries(adImgResponse.headers.entries())
+    // });
+    // console.log("adImgResponse",await adImgResponse.json());
+    
+    const imgUrl = await adImgResponse.json();
+    console.log("imgUrl",imgUrl);
+     image_Data = imgUrl.image;
+
+    console.log("image_Data",image_Data);
+    if (!adImgResponse.ok) {
+      console.error("Failed to fetch ad image:", adImgResponse.statusText);
+    }
+  } catch (error) {
+    console.error("Error fetching ad image:", error);
+  }
+  
   // Optimal dimensions for Farcaster frames (1.91:1 aspect ratio)
   let WIDTH = 504;
   let HEIGHT = 504;
@@ -90,7 +116,7 @@ if(Ratio === "1:1"){
          padding: 16px;
        ">
           <img 
-            src=${addImg} 
+            src=${image_Data} 
             alt="Profile" 
             style="
               width: ${ADD_SIZE}px; 
