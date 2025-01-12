@@ -158,7 +158,7 @@ console.log("response",response);
         // console.log("htmlContent",htmlContent);
         // Use jsdom to parse the HTML response
         const dom = new JSDOM(htmlContent);
-        fs.writeFileSync('src/original.html', htmlContent);
+        // fs.writeFileSync('src/original.html', htmlContent);
 
         // console.log("dom",dom);
         console.log("dom",dom.window.document);

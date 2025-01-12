@@ -220,7 +220,7 @@ if(Ratio === "1:1"){
     </html>
   `;
 
-  fs.writeFileSync('src/preview.html', previewHtml);
+  // fs.writeFileSync('src/preview.html', previewHtml);
   console.log("done");
 
   return dataURI;
