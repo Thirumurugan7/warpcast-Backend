@@ -103,31 +103,26 @@ app.get("*", async (req: Request, res: Response) => {
     const data = await response.json();
 
     console.log("data :", data);
-    const ads = data.data.ads;
+    const ads = data.data.ads.filter((ad: any) => parseInt(ad.id) >= 3);
 
     console.log("ads",ads);
-
-
-    // console.log("metadata",metadata);
-    
-    
-
     // Filter ads that match any of the target labels
     const filteredAds = ads.filter((ad: any) =>
-      ad.labels.some((label: any) => ["ct"].includes(label))
+      ad.labels.some((label: any) => targetLabels.includes(label))
     );
 
     if (filteredAds.length > 0) {
       // Select a random ad from the filtered ads
       const randomAd =
         filteredAds[Math.floor(Math.random() * filteredAds.length)];
-      console.log("randomAd",randomAd);
+      console.log("randomAd", randomAd);
       randomAdDisplay = randomAd;
     } else {
-      console.log("No ads match the target labels");
-      // skip
-      // pass
-      return null;
+      console.log("No ads match the target labels, selecting random ad");
+      // Select random ad from all ads
+      const randomAd = ads[Math.floor(Math.random() * ads.length)];
+      console.log("randomAd", randomAd);
+      randomAdDisplay = randomAd;
     }
   } catch (err) {
     console.error(err);
@@ -152,7 +147,7 @@ app.get("*", async (req: Request, res: Response) => {
       // Collect the stream data into a buffer
       const chunks: any[] = [];
 
-      console.log("response.data",response.data);
+      // console.log("response.data",response.data);
       
       response.data.on("data", (chunk: any) => chunks.push(chunk));
       response.data.on("end", async () => {
